@@ -9,4 +9,7 @@ Rails.application.routes.draw do
   match 'd3/:id/wordle' => 'd3#wordle', as: :d3_wordle, via: :get
   # For wordle data obtained from the tasks in vivo.rake
   match 'd3/:id/wordle_data.js' => 'd3#wordle_data', as: :d3_wordle_data, via: :get
+
+  match 'highcharts/:id/publication_types_pie_chart_data' => 'highcharts#publication_types_pie_chart_data', as: :publication_types_pie_chart_data, via: :get
+  match 'highcharts/:id/publication_types_pie_chart' => 'highcharts#publication_types_pie_chart', as: :publication_types_pie_chart, via: :get
 end

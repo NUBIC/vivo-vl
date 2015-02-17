@@ -1,8 +1,8 @@
-== VIVO-VL (VIVO - Visualization Library) 
+## VIVO-VL (VIVO - Visualization Library) 
 
 ---
 
-=== Overview
+### Overview
 
 This is a simple [Ruby on Rails][ror] application to show examples of visualizations 
 that are created with data from VIVO. 
@@ -15,26 +15,31 @@ steps needed to create the database.
 We use [PostgreSQL][postgresql] as a database but you can use any. Simply update the 
 config/database.yml file as described in the [Rails Guides][db_guide].
 
-==== Chord Diagram
+#### Chord Diagram
 
 An example of a Chord Diagram showing the relationship of investigator collaborations
 through the vivo:Authorship records. Based on [Mike Bostock's Chord Diagram][d3_chord]. 
 
-==== Word Cloud (Wordle)
+#### Word Cloud (Wordle)
 
 An example of a Word Cloud showing the frequency of words used in bibo:Documents
 associated with an Author. Based on [Jason Davies' Word Cloud][d3_wordle].
 
+#### Pie Chart
+
+Using the different classes of Publications, here we show the percentage of publication
+types by author. Based on [Highcharts Pie Demo][highcharts_pie_demo].
+
 ---
 
-=== Data
+### Data
 
 The data used by these graphs is pulled from VIVO through the [SPARQL API][sparql_api].
 
 Look into the *.rake files for the SPARQL queries used, the data received, and how
 the data is massaged into formats used by the data diagrams.
 
-==== Chord Diagram
+#### Chord Diagram
 
 There are four (4) rake tasks to be run to get the chord diagram data
 
@@ -46,7 +51,7 @@ There are four (4) rake tasks to be run to get the chord diagram data
 These tasks and descriptions of what they do are in the 
 lib/tasks/investigator_chord.rake file.
 
-==== Word Cloud (Wordle)
+#### Word Cloud (Wordle)
 
 There are three (3) rake tasks to be run to get the chord diagram data
 
@@ -57,26 +62,36 @@ There are three (3) rake tasks to be run to get the chord diagram data
 These tasks and descriptions of what they do are in the 
 lib/tasks/wordle.rake file.
 
+#### Pie Chart
+
+There are two (2) rake tasks to be run to get the pie chart data
+
+1. rake pie:uris
+2. rake pie:publication_type_counts
+
+These tasks and descriptions of what they do are in the 
+lib/tasks/pie.rake file.
+
 ---
 
-=== UI
+### UI
 
 There are three (3) types of files touched in order to render a page.
 
-==== Routes
+#### Routes
 
 All routes are defined in the config/routes.rb file. 
 
 There are generally two routes per data diagram - one to the page that 
 renders the diagram and one to the data used to create the diagram.
 
-==== Controllers
+#### Controllers
 
 For organizational purposes, I have created a Controller class for 
 each distinct visualization library used. For example, all diagrams
 using the d3js.org libraries are in the D3Controller.
 
-==== Views
+#### Views
 
 Here is perhaps the most interesting part of this project
 where we actually use the visualization libraries to render the page.
@@ -90,3 +105,4 @@ where we actually use the visualization libraries to render the page.
 [postgresql]: http://www.postgresql.org
 [db_guide]: http://edgeguides.rubyonrails.org/configuring.html#configuring-a-database
 [sparql_api]: https://wiki.duraspace.org/display/VIVO/The+SPARQL+Query+API
+[highcharts_pie_demo]: http://www.highcharts.com/demo/pie-basic

@@ -77,18 +77,36 @@ namespace :investigator_chord do
   # @return[String]
   def coauthor_sparql(uri)
     "query=#{rdf_prefices} SELECT distinct ?Coauthor ?Coauthor_name ?PI_name 
-    WHERE {
-    ?Authorship1 rdf:type vivo:Authorship .
-    ?Authorship1 vivo:relates <#{uri}> .
-    ?Authorship1 vivo:relates ?Document1 .
-    ?Document1 rdf:type bibo:Document .
-    ?Document1 vivo:relatedBy ?Authorship2 .
-    ?Authorship2 rdf:type vivo:Authorship .
-    ?Coauthor rdf:type vivo:FacultyMember .
-    ?Coauthor vivo:relatedBy ?Authorship2 .
-    ?Coauthor rdfs:label ?Coauthor_name .
-    <#{uri}> rdfs:label ?PI_name .
-    FILTER (!(?Authorship1=?Authorship2))
+      WHERE {
+        ?Authorship1 rdf:type vivo:Authorship .
+        ?Authorship1 vivo:relates <#{uri}> .
+        ?Authorship1 vivo:relates ?Document1 .
+        ?Document1 rdf:type bibo:Document .
+        ?Document1 vivo:relatedBy ?Authorship2 .
+        ?Authorship2 rdf:type vivo:Authorship .
+        ?Coauthor rdf:type vivo:FacultyMember .
+        ?Coauthor vivo:relatedBy ?Authorship2 .
+        ?Coauthor rdfs:label ?Coauthor_name .
+        <#{uri}> rdfs:label ?PI_name .
+      FILTER (!(?Authorship1=?Authorship2))
+    }"
+  end
+
+  ##
+  # SPARQL query to determine the number of shared publications between two coauthors
+  # @param[String] uri1 for one of the vivo:FacultyMember authors
+  # @param[String] uri2 for the other vivo:FacultyMember author
+  # @return[String]
+  def coauthor_count_sparql(uri1, uri2)
+    "query=#{rdf_prefices} SELECT (count(?Document1) as ?cnt)
+      WHERE {
+        ?Authorship1 rdf:type vivo:Authorship .
+        ?Authorship1 vivo:relates <#{uri1}> .
+        ?Authorship1 vivo:relates ?Document1 .
+        ?Document1 rdf:type bibo:Document .
+        ?Document1 vivo:relatedBy ?Authorship2 .
+        ?Authorship2 rdf:type vivo:Authorship .
+        ?Authorship2 vivo:relates <#{uri2}>
     }"
   end
 

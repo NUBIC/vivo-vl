@@ -7,7 +7,7 @@ module Vivo
   # Set this to your instiution's namespace
   # @see uuid_from_uri(uri)
   def vivo_namespace
-    'http://vivo.northwestern.edu/individual/'
+    'http://vivo.northwestern.edu/individual/n'
   end
 
   ##
@@ -84,6 +84,10 @@ module Vivo
     PREFIX bibo:     <http://purl.org/ontology/bibo/>
     PREFIX foaf:     <http://xmlns.com/foaf/0.1/>
     PREFIX vcard:    <http://www.w3.org/2006/vcard/ns#>
-    PREFIX vivo:     <http://vivoweb.org/ontology/core#>"
+    PREFIX fabio:    <http://purl.org/spar/fabio/>
+    PREFIX obo:      <http://purl.obolibrary.org/obo/>
+    PREFIX vivo:     <http://vivoweb.org/ontology/core#>
+    PREFIX vlocal:   <http://vivo.northwestern.edu/ontology/vlocal#>
+    "
   end
 end
