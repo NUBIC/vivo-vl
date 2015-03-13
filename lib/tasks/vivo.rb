@@ -14,13 +14,15 @@ module Vivo
   # Set this to the username/email of the vivo user who can
   # run queries through the SPARQL API
   def vivo_user
-    'vivo_root@northwestern.edu'
+    # 'vivo_root@northwestern.edu'
+    'vivo_root@school.edu'
   end
 
   ##
   # Password for the vivo_user
   def password
-    'pwd'
+    # 'pwd'
+    '13#vivo#'
   end
 
   ##
@@ -73,6 +75,39 @@ module Vivo
     arr
   end
 
+  ## 
+  # Read the data from the coauthors file
+  # @param[String] uri for the vivo:FacultyMember
+  # @return[Array]
+  def get_coauthor_array(uri)
+    filename = "#{Rails.root}/tmp/vivo/coauthors/#{uuid_from_uri(uri)}.json"
+    file = File.read(filename)
+    data = JSON.parse(file)
+    data["results"]["bindings"]
+  end
+
+  ## 
+  # Read the data from the publication_counts file
+  # @param[String] uri for the vivo:FacultyMember
+  # @return[String]
+  def pub_count(uri)
+    filename = "#{Rails.root}/tmp/vivo/publication_counts/#{uuid_from_uri(uri)}.json"
+    file = File.read(filename)
+    data = JSON.parse(file)
+    data["results"]["bindings"].first['cnt']['value']
+  end
+
+  ## 
+  # Read the data from the coauthor_counts file
+  # @param[String] uri for the vivo:FacultyMember
+  # @return[String]
+  def shared_pub_count(uri1, uri2)
+    filename = "#{Rails.root}/tmp/vivo/coauthor_counts/#{uuid_from_uri(uri1)}_#{uuid_from_uri(uri2)}.json"
+    file = File.read(filename)
+    data = JSON.parse(file)
+    data["results"]["bindings"].first['cnt']['value']
+  end
+
   ##
   # RDF Prefices needed to run the SPARQL queries below
   # @see coauthor_sparql
@@ -89,5 +124,56 @@ module Vivo
     PREFIX vivo:     <http://vivoweb.org/ontology/core#>
     PREFIX vlocal:   <http://vivo.northwestern.edu/ontology/vlocal#>
     "
+  end
+
+  ##
+  # SPARQL query to get the Coauthor URI, Coauthor Name, and PI Name 
+  # @param[String] uri for the vivo:FacultyMember
+  # @return[String]
+  def coauthor_sparql(uri)
+    "query=#{rdf_prefices} SELECT distinct ?Coauthor ?Coauthor_name ?PI_name 
+      WHERE {
+        ?Authorship1 rdf:type vivo:Authorship .
+        ?Authorship1 vivo:relates <#{uri}> .
+        ?Authorship1 vivo:relates ?Document1 .
+        ?Document1 rdf:type bibo:Document .
+        ?Document1 vivo:relatedBy ?Authorship2 .
+        ?Authorship2 rdf:type vivo:Authorship .
+        ?Coauthor rdf:type vivo:FacultyMember .
+        ?Coauthor vivo:relatedBy ?Authorship2 .
+        ?Coauthor rdfs:label ?Coauthor_name .
+        <#{uri}> rdfs:label ?PI_name .
+      FILTER (!(?Authorship1=?Authorship2))
+    }"
+  end
+
+  ##
+  # SPARQL query to determine the number of shared publications between two coauthors
+  # @param[String] uri1 for one of the vivo:FacultyMember authors
+  # @param[String] uri2 for the other vivo:FacultyMember author
+  # @return[String]
+  def coauthor_count_sparql(uri1, uri2)
+    "query=#{rdf_prefices} SELECT (count(?Document1) as ?cnt)
+      WHERE {
+        ?Authorship1 rdf:type vivo:Authorship .
+        ?Authorship1 vivo:relates <#{uri1}> .
+        ?Authorship1 vivo:relates ?Document1 .
+        ?Document1 rdf:type bibo:Document .
+        ?Document1 vivo:relatedBy ?Authorship2 .
+        ?Authorship2 rdf:type vivo:Authorship .
+        ?Authorship2 vivo:relates <#{uri2}>
+    }"
+  end
+
+  ##
+  # SPARQL query to get the number of publications for this person in VIVO
+  # @param[String] uri for the vivo:FacultyMember
+  # @return[String]
+  def publication_count_sparql(uri)
+    "query=#{rdf_prefices} SELECT (count(?Authorship1) as ?cnt)
+    WHERE {
+    ?Authorship1 rdf:type vivo:Authorship .
+    ?Authorship1 vivo:relates <#{uri}>
+    }"
   end
 end

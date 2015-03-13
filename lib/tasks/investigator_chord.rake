@@ -72,57 +72,6 @@ namespace :investigator_chord do
   end
 
   ##
-  # SPARQL query to get the Coauthor URI, Coauthor Name, and PI Name 
-  # @param[String] uri for the vivo:FacultyMember
-  # @return[String]
-  def coauthor_sparql(uri)
-    "query=#{rdf_prefices} SELECT distinct ?Coauthor ?Coauthor_name ?PI_name 
-      WHERE {
-        ?Authorship1 rdf:type vivo:Authorship .
-        ?Authorship1 vivo:relates <#{uri}> .
-        ?Authorship1 vivo:relates ?Document1 .
-        ?Document1 rdf:type bibo:Document .
-        ?Document1 vivo:relatedBy ?Authorship2 .
-        ?Authorship2 rdf:type vivo:Authorship .
-        ?Coauthor rdf:type vivo:FacultyMember .
-        ?Coauthor vivo:relatedBy ?Authorship2 .
-        ?Coauthor rdfs:label ?Coauthor_name .
-        <#{uri}> rdfs:label ?PI_name .
-      FILTER (!(?Authorship1=?Authorship2))
-    }"
-  end
-
-  ##
-  # SPARQL query to determine the number of shared publications between two coauthors
-  # @param[String] uri1 for one of the vivo:FacultyMember authors
-  # @param[String] uri2 for the other vivo:FacultyMember author
-  # @return[String]
-  def coauthor_count_sparql(uri1, uri2)
-    "query=#{rdf_prefices} SELECT (count(?Document1) as ?cnt)
-      WHERE {
-        ?Authorship1 rdf:type vivo:Authorship .
-        ?Authorship1 vivo:relates <#{uri1}> .
-        ?Authorship1 vivo:relates ?Document1 .
-        ?Document1 rdf:type bibo:Document .
-        ?Document1 vivo:relatedBy ?Authorship2 .
-        ?Authorship2 rdf:type vivo:Authorship .
-        ?Authorship2 vivo:relates <#{uri2}>
-    }"
-  end
-
-  ##
-  # SPARQL query to get the number of publications for this person in VIVO
-  # @param[String] uri for the vivo:FacultyMember
-  # @return[String]
-  def publication_count_sparql(uri)
-    "query=#{rdf_prefices} SELECT (count(?Authorship1) as ?cnt)
-    WHERE {
-    ?Authorship1 rdf:type vivo:Authorship .
-    ?Authorship1 vivo:relates <#{uri}>
-    }"
-  end
-
-  ##
   # Run curl to vivo/api/sparqlQuery
   # and output it to a file in the tmp/vivo/coauthors directory
   # cf. https://wiki.duraspace.org/display/VIVO/The+SPARQL+Query+API
@@ -154,17 +103,6 @@ namespace :investigator_chord do
     imports(get_coauthor_array(uri))
   end
 
-  ## 
-  # Read the data from the coauthors file
-  # @param[String] uri for the vivo:FacultyMember
-  # @return[Array]
-  def get_coauthor_array(uri)
-    filename = "#{Rails.root}/tmp/vivo/coauthors/#{uuid_from_uri(uri)}.json"
-    file = File.read(filename)
-    data = JSON.parse(file)
-    data["results"]["bindings"]
-  end
-
   ##
   # Create an array of coauthor name
   # @param[Array<Hash>]
@@ -175,15 +113,8 @@ namespace :investigator_chord do
     imports
   end
 
-  ## 
-  # Read the data from the publication_counts file
-  # @param[String] uri for the vivo:FacultyMember
-  # @return[String]
-  def pub_count(uri)
-    filename = "#{Rails.root}/tmp/vivo/publication_counts/#{uuid_from_uri(uri)}.json"
-    file = File.read(filename)
-    data = JSON.parse(file)
-    data["results"]["bindings"].first['cnt']['value']
-  end
-
 end
+
+
+# http://vivo.northwestern.edu/individual/n3e6aafd6d7
+# http://vivo.northwestern.edu/individual/nf7a1f7a00d

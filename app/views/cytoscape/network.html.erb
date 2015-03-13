@@ -1,0 +1,173 @@
+<% @include_graph_link = true if @include_graph_link.nil? %>
+<% params[:depth] ||= 1 %>
+<% params[:include_publications] ||= 1 %>
+
+<script type="text/javascript">
+  var cytoscapeGraphURL = "<%= @dataurl -%>";
+  var swfPath = "/swf/CytoscapeWeb";
+  var flashInstallerPath = "/swf/playerProductInstall'";
+</script>
+
+<div class="slice">
+  <div id="investigator_title_block">
+    <%#= investigator_bio_heading(@investigator, all_abstracts, title, false).html_safe %>
+  </div>
+  <div id="cytoscape_options">
+    <p>
+      <input type="checkbox" id="nodeLabelsVisibleCheckbox"> Show Node Labels </input>
+      <input type="checkbox" id="edgeLabelsVisibleCheckbox"> Show Edge Labels </input>
+    </p>
+    <span id="layoutradio">
+      <form id="form1" name="form1">
+        <input type="radio" name="layout" value="ForceDirected"> ForceDirected </input>
+        <input type="radio" name="layout" value="Circle"> Circle </input>
+        <input type="radio" name="layout" value="Radial"> Radial </input>
+        <input type="radio" name="layout" value="Tree"> Tree </input>
+      </form>
+    </span>
+
+    <span>
+      <label for="amount">In common:</label>
+      <input type="text" id="amount" style="border: 0; color: #f6931f; font-weight: bold; width: 20px" />
+      <div id="slider" style="width: 250px; clear: both; display: inline-block; "></div>
+    </span>
+
+  </div>
+  <script language="javascript" type="text/javascript">
+    var g_awards;
+    var g_awards2;
+
+    jQuery("#nodeLabelsVisibleCheckbox").bind('click', function(event){
+      vis.nodeLabelsVisible(!vis.nodeLabelsVisible());
+      setItemCheckStatus("#nodeLabelsVisibleCheckbox",vis.nodeLabelsVisible())
+    });
+    jQuery("#edgeLabelsVisibleCheckbox").bind('click', function(event){
+      vis.edgeLabelsVisible(!vis.edgeLabelsVisible());
+      setItemCheckStatus("#edgeLabelsVisibleCheckbox",vis.edgeLabelsVisible())
+    });
+    jQuery("#showAwardEdgeCheckbox").bind('click', function(event){
+      var show_award = getItemCheckStatus("#showAwardEdgeCheckbox");
+      var show_abstract = getItemCheckStatus("#showAbstractEdgeCheckbox");
+      if (show_award) {show_award=true;}else{show_award=false}
+      if (show_abstract) {show_abstract=true;}else{show_abstract=false}
+
+      vis.filter("edges", function(obj) {
+        var result=true;
+        if (obj.data.element_type == 'Award') {
+          result = show_award;
+        }
+        if (obj.data.element_type == 'Abstract') {
+          result = show_abstract;
+        }
+        return result;
+      }, true);
+    });
+    jQuery("#showAbstractEdgeCheckbox").bind('click', function(event){
+      var show_award = getItemCheckStatus("#showAwardEdgeCheckbox");
+      var show_abstract = getItemCheckStatus("#showAbstractEdgeCheckbox");
+      if (show_award) {show_award=true;}else{show_award=false}
+      if (show_abstract) {show_abstract=true;}else{show_abstract=false}
+      vis.filter("edges", function(obj) {
+        var result=true;
+        if (obj.data.element_type == 'Award') {
+          result = show_award;
+        }
+        if (obj.data.element_type == 'Abstract') {
+          result = show_abstract;
+        }
+        return result;
+      }, true);
+    });
+    jQuery("#showAll").bind('click', function(event){
+      vis.filter("edges", function(obj) {
+        return true;
+      }, true);
+      vis.removeFilter();
+    });
+    jQuery("#saveNetwork").bind('click', function(event){
+       doExportNetwork();
+    });
+    jQuery("#layoutradio").bind('click', function(event){
+       jQuery("input[name='layout']").each(
+        function() {
+          if(jQuery(this).is(':checked')) {
+              changeCytoscapeLayout(jQuery(this).val());
+          }
+        }
+      )
+    });
+    jQuery("input[name='layout']").parent().css({border:"1px darkblue solid", padding: "5px"});
+
+    function refreshEdges() {
+      var the_val = jQuery( "#slider" ).slider( "value" );
+      var show_award = getItemCheckStatus("#showAwardEdgeCheckbox");
+      var show_abstract = getItemCheckStatus("#showAbstractEdgeCheckbox");
+      if (show_award) {show_award=true;}else{show_award=false}
+      if (show_abstract) {show_abstract=true;}else{show_abstract=false}
+      vis.filter("edges", function(edge) {
+        var result = (edge.data.weight >= the_val);
+        if (result == false) {
+          return result;
+        };
+        if (edge.data.element_type == 'Award') {
+          result = show_award;
+        };
+        if (edge.data.element_type == 'Abstract') {
+          result = show_abstract;
+        };
+        return result;
+      }, true);
+      jQuery( "#amount" ).val( the_val );
+    }
+    jQuery(function() {
+      jQuery( "#slider" ).slider({
+        orientation: "horizontal",
+        range: "min",
+        min: 0,
+        max: 100,
+        value: 10,
+        step: 2,
+        slide: refreshEdges,
+        change: refreshEdges
+      });
+      jQuery( "#amount" ).val( jQuery( "#slider" ).slider( "value" ) );
+    });
+
+    function changeCytoscapeLayout(layout_name) {
+      vis.layout({name: layout_name, options: LAYOUTS[layout_name]});
+      return true;
+    }
+    function setItemCheckStatus(id,status) {
+      jQuery(id).attr('checked',status);
+      return true;
+    }
+    function getItemCheckStatus(id) {
+      return jQuery(id).attr('checked')
+    }
+
+    function setSelectedLayout(title) {
+      jQuery("input[name='layout']").each(
+        function() {
+          if(jQuery(this).val() == title) {
+            jQuery(this).attr("checked","checked");
+          } else if(jQuery(this).is(':checked')) {
+            jQuery(this).removeAttr("checked");
+          }
+        }
+      )
+    }
+    function doExportNetwork() {
+      vis.exportNetwork("pdf", "export");
+      return this;
+    }
+    setItemCheckStatus("#showAbstractEdgeCheckbox",true);
+    setItemCheckStatus("#showAwardEdgeCheckbox",true);
+  </script>
+
+  <div id="content" class="half_and_half" style="min-height: 500px;">
+    <div id="location"></div>
+    <div id="loader"></div>
+    <div>Please wait while loading content...</div>
+  </div>
+
+</div>

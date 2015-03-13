@@ -11,7 +11,7 @@ Pie chart template
 
 <script type="text/javascript">
 $(function () {
-  $.get('publication_types_pie_chart_data.csv', function(csv) {
+  $.get('medline_categories_pie_chart_data.csv', function(csv) {
     $('#container').highcharts({
       chart: {
         plotBackgroundColor: null,
@@ -19,7 +19,7 @@ $(function () {
         plotShadow: false
       },
       title: {
-        text: 'Publication Types'
+        text: 'Medline Categories'
       },
       data: { csv: csv },
       tooltip: {
