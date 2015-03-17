@@ -8,6 +8,11 @@ include Vivo
 # @see CytoscapeController
 namespace :cytoscape do
 
+  desc 'Create files for for all vivo:FacultyMembers saving the uri and name of each and save them in the tmp/vivo/faculty_members/uris.json file'
+  task :uris => :environment do 
+    run_all_uris_and_names_curl
+  end
+
   desc 'Create the files for the pi and coauthors and save them in the tmp/vivo/coauthors directory'
   task :coauthors => :environment do 
     vivo_uris_and_names.each do |uri, name|
@@ -29,7 +34,7 @@ namespace :cytoscape do
   end
 
   ##
-  # @see build_chord_data_array
+  # @see build_network_data
   desc 'Put the data we got from coauthors and publication_counts tasks into the format we want and save it into the tmp/vivo/network_data directory'
   task :network_data => :environment do 
     vivo_uris_and_names.each do |uri, name|

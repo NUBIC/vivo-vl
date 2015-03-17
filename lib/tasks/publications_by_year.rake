@@ -14,7 +14,8 @@ namespace :publications_by_year do
     run_all_uris_and_names_curl
   end
 
-  desc 'Create files for the publication counts for the last 40 years and save them in the tmp/vivo/publication_counts_by_year directory'
+  desc 'Create files for the publication counts for the last 40 years and 
+        save them in the tmp/vivo/publication_counts_by_year directory'
   task :counts => :environment do
     dir = "tmp/vivo/publication_counts_by_year"
     ((Time.now.year-40)..Time.now.year).each do |year|
@@ -33,8 +34,8 @@ namespace :publications_by_year do
         ?pub vivo:dateTimeValue ?dtv .
         ?dtv rdf:type vivo:DateTimeValue .
         ?dtv vivo:dateTime ?dt .
-        FILTER (str(?dt) >= '#{year}-01-01T:00:00:00')
-        FILTER (str(?dt) <= '#{year}-12-31T:00:00:00')
+        FILTER (?dt >= '#{year}-01-01T00:00:00'^^xsd:dateTime)
+        FILTER (?dt <= '#{year}-12-31T00:00:00'^^xsd:dateTime)
       }"
   end
 end

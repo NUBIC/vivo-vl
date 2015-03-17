@@ -72,6 +72,27 @@ There are two (2) rake tasks to be run to get the pie chart data
 These tasks and descriptions of what they do are in the 
 lib/tasks/pie.rake file.
 
+#### Publications By Year
+
+There is one (1) rake task to be run to create the publication by year data
+
+1. rake publications_by_year:count
+
+These tasks and descriptions of what they do are in the 
+lib/tasks/publications_by_year.rake file.
+
+#### Cytoscape
+
+There are four (4) rake tasks to be run to create the cytoscape radial graph data
+
+1. rake cytoscape:uris
+2. rake cytoscape:coauthors
+3. rake cytoscape:coauthor_counts
+4. rake cytoscape:network_data
+
+These tasks and descriptions of what they do are in the 
+lib/tasks/cytoscape.rake file.
+
 ---
 
 ### UI
