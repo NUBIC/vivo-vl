@@ -15,6 +15,8 @@ steps needed to create the database.
 We use [PostgreSQL][postgresql] as a database but you can use any. Simply update the 
 config/database.yml file as described in the [Rails Guides][db_guide].
 
+Most of these visualizations come from [LatticeGrid][latticegrid].
+
 #### Chord Diagram
 
 An example of a Chord Diagram showing the relationship of investigator collaborations
@@ -29,6 +31,14 @@ associated with an Author. Based on [Jason Davies' Word Cloud][d3_wordle].
 
 Using the different classes of Publications, here we show the percentage of publication
 types by author. Based on [Highcharts Pie Demo][highcharts_pie_demo].
+
+#### Publications By Year
+
+Simple Bar Chart created using [Highcharts][highcharts] showing the number of publications for each year.
+
+#### Cytoscape
+
+Similar to the Chord Diagram, but showing author relationships using the [Cytoscape Web][cytoscape_web] library.
 
 ---
 
@@ -125,5 +135,8 @@ where we actually use the visualization libraries to render the page.
 [d3_wordle]: http://www.jasondavies.com/wordcloud
 [postgresql]: http://www.postgresql.org
 [db_guide]: http://edgeguides.rubyonrails.org/configuring.html#configuring-a-database
+[latticegrid]: https://github.com/NUBIC/LatticeGrid
 [sparql_api]: https://wiki.duraspace.org/display/VIVO/The+SPARQL+Query+API
 [highcharts_pie_demo]: http://www.highcharts.com/demo/pie-basic
+[highcharts]: http://www.highcharts.com/
+[cytoscape_web]: http://cytoscapeweb.cytoscape.org
