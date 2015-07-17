@@ -6,7 +6,8 @@ gem 'rails', '4.1.6'
 # Use postgresql as the database for Active Record
 # use the following to install pg gem if using the Postgre.app on osx
 # $ gem install pg -- --with-pg-config=/Applications/Postgres.app/Contents/Versions/9.3/bin/pg_config
-gem 'pg'
+# gem 'pg'
+gem 'sqlite3'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
 # Use Uglifier as compressor for JavaScript assets
@@ -35,7 +36,10 @@ gem 'spring', group: :development
 # gem 'unicorn'
 
 # Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+gem 'capistrano', '~> 3.4.0'
+gem 'capistrano-rvm'
+gem 'capistrano-rails', group: :development
+gem 'capistrano-passenger', group: :development
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
@@ -46,3 +50,4 @@ gem 'haml-rails'
 
 # Use rspec for testing
 gem 'rspec-rails'
+
