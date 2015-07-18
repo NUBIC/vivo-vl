@@ -2,10 +2,6 @@
 set :stage, :staging
 set :rails_env, :staging
 
-set :deploy_to, '/var/www/apps/vivo-vl'
-set :linked_files, []
-set :bundle_flags, '--deployment --quiet'
-
 role :app, %w{vtfsmvivo.fsm.northwestern.edu}
 role :web, %w{vtfsmvivo.fsm.northwestern.edu}
 role :db,  %w{vtfsmvivo.fsm.northwestern.edu}
