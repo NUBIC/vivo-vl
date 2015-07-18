@@ -27,7 +27,7 @@ namespace :wordle do
   def run_wordle_curl(uri)
     filename = "tmp/vivo/wordle/#{uuid_from_uri(uri)}.json"
     File.open('wordle.sparql', 'w') { |file| file.write(wordle_sparql(uri)) }
-    %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@wordle.sparql' -H 'Accept: application/sparql-results+json' 'http://localhost:8080/vivo/api/sparqlQuery' > #{filename} )
+    %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@wordle.sparql' -H 'Accept: application/sparql-results+json' '#{sparql_query_api_url}' > #{filename} )
   end
 
   desc 'Put the data we got from the get_words task into the format we want and save it into the tmp/vivo/wordle_data directory'

@@ -2,7 +2,11 @@
 # Methods shared among the rake tasks used to build
 # data used in the UI.
 module Vivo
-  
+
+  def sparql_query_api_url
+    'http://localhost:8080/vivo/api/sparqlQuery'
+  end
+
   ##
   # Set this to your instiution's namespace
   # @see uuid_from_uri(uri)
@@ -14,15 +18,13 @@ module Vivo
   # Set this to the username/email of the vivo user who can
   # run queries through the SPARQL API
   def vivo_user
-    # 'vivo_root@northwestern.edu'
     'vivo_root@school.edu'
   end
 
   ##
   # Password for the vivo_user
   def password
-    # 'pwd'
-    '13#vivo#'
+    'pwd'
   end
 
   ##
@@ -37,7 +39,7 @@ module Vivo
   # and output it to a file in the tmp/vivo/faculty_members directory
   def run_all_uris_and_names_curl
     File.open('uris.sparql', 'w') { |file| file.write(uris_sparql) }
-    %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@uris.sparql' -H 'Accept: application/sparql-results+json' 'http://localhost:8080/vivo/api/sparqlQuery' > tmp/vivo/faculty_members/uris.json )
+    %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@uris.sparql' -H 'Accept: application/sparql-results+json' '#{sparql_query_api_url}' > tmp/vivo/faculty_members/uris.json )
   end
 
   ##
