@@ -149,7 +149,7 @@ namespace :cytoscape do
     filename = "tmp/vivo/coauthors/#{uuid_from_uri(uri)}.json"
     return if File.exist?(filename)    
     File.open('coauthor.sparql', 'w') { |file| file.write(coauthor_sparql(uri)) }
-    %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@coauthor.sparql' -H 'Accept: application/sparql-results+json' 'http://localhost:8080/vivo/api/sparqlQuery' > #{filename} )
+    %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@coauthor.sparql' -H 'Accept: application/sparql-results+json' '#{sparql_query_api_url}' > #{filename} )
   end
 
   ##
@@ -161,7 +161,7 @@ namespace :cytoscape do
     filename = "tmp/vivo/coauthor_counts/#{uuid_from_uri(uri1)}_#{uuid_from_uri(uri2)}.json"
     return if File.exist?(filename)
     File.open('coauthor_count.sparql', 'w') { |file| file.write(coauthor_count_sparql(uri1, uri2)) }
-    %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@coauthor_count.sparql' -H 'Accept: application/sparql-results+json' 'http://localhost:8080/vivo/api/sparqlQuery' > #{filename} )
+    %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@coauthor_count.sparql' -H 'Accept: application/sparql-results+json' '#{sparql_query_api_url}' > #{filename} )
   end
 
 end

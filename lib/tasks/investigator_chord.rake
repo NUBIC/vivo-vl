@@ -80,7 +80,7 @@ namespace :investigator_chord do
     filename = "tmp/vivo/coauthors/#{uuid_from_uri(uri)}.json"
     return if File.exist?(filename)    
     File.open('coauthor.sparql', 'w') { |file| file.write(coauthor_sparql(uri)) }
-    %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@coauthor.sparql' -H 'Accept: application/sparql-results+json' 'http://localhost:8080/vivo/api/sparqlQuery' > #{filename} )
+    %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@coauthor.sparql' -H 'Accept: application/sparql-results+json' '#{sparql_query_api_url}' > #{filename} )
   end
 
   ##
@@ -92,7 +92,7 @@ namespace :investigator_chord do
     filename = "tmp/vivo/publication_counts/#{uuid_from_uri(uri)}.json"
     return if File.exist?(filename)
     File.open('publication_count.sparql', 'w') { |file| file.write(publication_count_sparql(uri)) }
-    %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@publication_count.sparql' -H 'Accept: application/sparql-results+json' 'http://localhost:8080/vivo/api/sparqlQuery' > #{filename} )
+    %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@publication_count.sparql' -H 'Accept: application/sparql-results+json' '#{sparql_query_api_url}' > #{filename} )
   end
 
   ##

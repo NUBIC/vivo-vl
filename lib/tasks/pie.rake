@@ -22,7 +22,7 @@ namespace :pie do
         FileUtils.mkdir_p(dir) unless File.exist?(dir)
         filename = "#{dir}/#{type.gsub(':', '_').downcase}.json"
         File.open('publication_type.sparql', 'w') { |file| file.write(publication_type_sparql(uri, type)) }
-        %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@publication_type.sparql' -H 'Accept: application/sparql-results+json' 'http://localhost:8080/vivo/api/sparqlQuery' > #{filename} )
+        %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@publication_type.sparql' -H 'Accept: application/sparql-results+json' '#{sparql_query_api_url}' > #{filename} )
       end
       arr = []
       CSV.open("#{dir}/pie_data.csv", 'wb', :col_sep => ',') do |csv|
@@ -46,7 +46,7 @@ namespace :pie do
         FileUtils.mkdir_p(dir) unless File.exist?(dir)
         filename = "#{dir}/#{cat.gsub('.', '').gsub('\'', '').gsub(',', '').gsub(' ', '_').downcase}.json"
         File.open('medline_categories.sparql', 'w') { |file| file.write(medline_categories_sparql(uri, cat)) }
-        %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@medline_categories.sparql' -H 'Accept: application/sparql-results+json' 'http://localhost:8080/vivo/api/sparqlQuery' > #{filename} )
+        %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@medline_categories.sparql' -H 'Accept: application/sparql-results+json' '#{sparql_query_api_url}' > #{filename} )
       end
       arr = []
       CSV.open("#{dir}/pie_data.csv", 'wb', :col_sep => ',') do |csv|

@@ -22,7 +22,7 @@ namespace :publications_by_year do
       FileUtils.mkdir_p(dir) unless File.exist?(dir)
       filename = "#{dir}/#{year}.json"
       File.open('publications_by_year.sparql', 'w') { |file| file.write(publications_by_year_sparql(year)) }
-      %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@publications_by_year.sparql' -H 'Accept: application/sparql-results+json' 'http://localhost:8080/vivo/api/sparqlQuery' > #{filename} )
+      %x( curl -d 'email=#{vivo_user}' -d 'password=#{password}' -d '@publications_by_year.sparql' -H 'Accept: application/sparql-results+json' '#{sparql_query_api_url}' > #{filename} )
     end
   end
 
