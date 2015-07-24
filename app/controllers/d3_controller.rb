@@ -28,7 +28,7 @@ class D3Controller < ApplicationController
   # @see http://bl.ocks.org/mbostock/4062006
   def investigator_chord
     set_json_callback("../d3/#{params[:id]}/investigator_chord_data.js")
-    set_title('Chord Diagram showing investigator collaborations through publications')
+    set_title('Chord Diagram showing investigator collaborations')
 
     respond_to do |format|
       format.html { render layout: 'vivo' }
